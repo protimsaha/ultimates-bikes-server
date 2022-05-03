@@ -45,6 +45,7 @@ MongoClient.connect(uri, function (err, client) {
                 const result = await bikeCollection.updateOne(filter, updateDoc, options);
                 res.send(result)
             })
+
             app.put('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const newNumber = req.body
