@@ -18,12 +18,21 @@ MongoClient.connect(uri, function (err, client) {
             await client.connect()
             const bikeCollection = client.db('assignment11').collection('bikes')
 
+            // get all item
             app.get('/bikes', async (req, res) => {
                 const cursor = bikeCollection.find({})
                 const bikes = await cursor.toArray()
                 res.send(bikes)
             })
 
+            // Add new item
+            app.post('/bikes', async (req, res) => {
+                const newItem = req.body;
+                const result = await bikeCollection.insertOne(newItem)
+                res.send(result)
+            })
+
+            // get bike by id
             app.get('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const query = { _id: ObjectId(id) }
@@ -31,6 +40,7 @@ MongoClient.connect(uri, function (err, client) {
                 res.send(bike)
             })
 
+            // update quantity by id
             app.patch('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const updatedQuantity = req.body
@@ -46,6 +56,7 @@ MongoClient.connect(uri, function (err, client) {
                 res.send(result)
             })
 
+            // update quantity by id
             app.put('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const newNumber = req.body
@@ -61,6 +72,7 @@ MongoClient.connect(uri, function (err, client) {
                 res.send(result)
             })
 
+            // delete bike by id
             app.delete('/bikes/:id', async (req, res) => {
                 const id = req.params.id;
                 const query = { _id: ObjectId(id) }
