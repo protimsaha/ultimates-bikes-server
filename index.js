@@ -17,6 +17,7 @@ MongoClient.connect(uri, function (err, client) {
         try {
             await client.connect()
             const bikeCollection = client.db('assignment11').collection('bikes')
+            const itemCollection = client.db('assignment11').collection('item')
 
             // get all item
             app.get('/bikes', async (req, res) => {
@@ -39,6 +40,23 @@ MongoClient.connect(uri, function (err, client) {
                 const bike = await bikeCollection.findOne(query)
                 res.send(bike)
             })
+
+            // Add items by different user
+            app.post('/items', async (req, res) => {
+                const item = req.body;
+                const result = await itemCollection.insertOne(item)
+                res.send(result)
+            })
+
+            // get items by specific user
+            app.get('/items', async (req, res) => {
+                const email = req.query.email;
+                const query = { email: email }
+                const cursor = itemCollection.find(query)
+                const items = await cursor.toArray()
+                res.send(items)
+            })
+
 
             // update quantity by id
             app.patch('/bikes/:id', async (req, res) => {
