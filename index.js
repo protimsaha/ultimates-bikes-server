@@ -41,6 +41,8 @@ MongoClient.connect(uri, function (err, client) {
                 res.send(bike)
             })
 
+
+
             // Add items by different user
             app.post('/items', async (req, res) => {
                 const item = req.body;
@@ -57,12 +59,17 @@ MongoClient.connect(uri, function (err, client) {
                 res.send(items)
             })
 
+            app.delete('/items/:id', async (req, res) => {
+                const id = req.params.id;
+                const query = { _id: ObjectId(id) }
+                const result = await itemCollection.deleteOne(query)
+                res.send(result)
+            })
 
             // update quantity by id
             app.patch('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const updatedQuantity = req.body
-                // console.log(newQuantity)
                 const filter = { _id: ObjectId(id) }
                 const options = { upsert: true };
                 const updateDoc = {
@@ -78,7 +85,6 @@ MongoClient.connect(uri, function (err, client) {
             app.put('/bikes/:id', async (req, res) => {
                 const id = req.params.id
                 const newNumber = req.body
-                // console.log(update)
                 const filter = { _id: ObjectId(id) }
                 const options = { upsert: true };
                 const updateDoc = {
