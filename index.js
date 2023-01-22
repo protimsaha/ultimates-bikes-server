@@ -7,6 +7,8 @@ const cors = require('cors');
 
 require('dotenv').config()
 
+const fkDb = require('./data.json')
+
 app.use(cors())
 app.use(express.json())
 
@@ -29,7 +31,7 @@ var uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shar
 MongoClient.connect(uri, function (err, client) {
     async function run() {
         try {
-            await client.connect()
+            // await client.connect()
             const bikeCollection = client.db('assignment11').collection('bikes')
             const itemCollection = client.db('assignment11').collection('item')
 
@@ -41,6 +43,9 @@ MongoClient.connect(uri, function (err, client) {
             })
 
 
+            app.get('/dataS',(req,res)=>{
+                res.send(fkDb)
+            })
 
             // get all item
             app.get('/bikes', async (req, res) => {
